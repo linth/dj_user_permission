@@ -140,4 +140,114 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.CustomUser"
 
 
+# LOGGING
+# https://qchoice.medium.com/django-logging%E8%A7%A3%E6%9E%90-5244c3dc8157
+import rich
+# https://stackoverflow.com/questions/1285372/how-does-one-make-logging-color-in-django-google-app-engine
+import rich.theme
 
+this_theme = rich.theme.Theme({
+    'logging.level.info': 'bold magenta',
+})
+rich.reconfigure(theme=this_theme)
+
+LOGGING = {
+    'version': 1, 
+    'disable_existing_loggers': False, # 是否取消使用內建的Loggers
+    'formatters': {
+        # 用於紀錄的格式，可以想像成模板
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+        'rich': {
+            'datefmt': '[%X]'
+        }
+    },
+    'handlers': {
+        # 用於處理紀錄，可以對訊息做不同的處理
+        'console': {
+            # show all information.
+            "class": "rich.logging.RichHandler",
+            "formatter": "rich",
+            "level": "DEBUG",
+        },
+        # 'verbose': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.StreamHandler',
+        #     'formatter': 'verbose',
+        # },
+        # 'simple': {
+        #     'level': 'INFO',
+        #     # 'class': 'logging.StreamHandler',
+        #     'class': 'rich.logging.RichHandler',
+        #     'formatter': 'rich'
+        # },
+        # 'debug_file': {
+        #     # access debug information into info.log
+        #     'level': 'DEBUG',
+        #     'class': 'logging.FileHandler',
+        #     'filename': BASE_DIR / 'log/debug.log',
+        #     'formatter': 'rich',
+        # },
+        # 'info_file': {
+        #     # access info information into info.log
+        #     'level': 'INFO',
+        #     'class': 'logging.FileHandler',
+        #     'filename': BASE_DIR / 'log/info.log',
+        #     'formatter': 'rich',
+        # },
+        # 'warning_file': {
+        #     # access warning information into warning.log
+        #     'level': 'WARN',
+        #     'class': 'logging.FileHandler',
+        #     'filename': BASE_DIR / 'log/warn.log',
+        #     'formatter': 'rich',
+        # },
+        # 'error_file': {
+        #     # access error information into warning.log
+        #     'level': 'ERROR',
+        #     'class': 'logging.FileHandler',
+        #     'filename': BASE_DIR / 'log/error.log',
+        #     'formatter': 'rich',
+        # },
+        # 'critical_file': {
+        #     # access critical information into warning.log
+        #     'level': 'CRITICAL',
+        #     'class': 'logging.FileHandler',
+        #     'filename': BASE_DIR / 'log/critical.log',
+        #     'formatter': 'rich',
+        # },
+    },
+    'loggers': {
+        # 用於紀錄，將前面的Handlers及Formatter整合使用
+        'my-logging': {
+            'handlers': ['console'],  # 'debug_file', 'info_file', 'warning_file', 'error_file', 'critical_file'
+            'level': 'DEBUG',
+            'propagate': True, # 是否連訊息出現的傳播路徑一同紀錄，
+        },
+        # 'debug-details': {
+        #     'handlers': ['console'], 
+        #     'level': 'DEBUG',
+        #     'propagate': True
+        # },
+        # 'debug-verbose': {
+        #     'handlers': ['verbose'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # }
+    },
+    'filters': {
+        # 'special': {
+        #     '()': 'project.logging.SpecialFilter',
+        #     'foo': 'bar',
+        # },
+        # 'require_debug_true': {
+        #     '()': 'django.utils.log.RequireDebugTrue',
+        # },
+    }
+}
