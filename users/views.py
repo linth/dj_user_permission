@@ -1,15 +1,19 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from users.models import CustomUser
-from users.serializers import CustomUserSerializer
+# from users.models import CustomUser
+# from users.serializers import CustomUserSerializer
+from users.serializers import UserSerializer
+from users.permissions import IsOwnerCanRead, IsOwnerOrReadOnly
 
 import logging
 # https://testdriven.io/blog/django-custom-user-model/
+# https://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#adding-endpoints-for-our-user-models
 '''
 HTTP 200 OK
 Allow: GET, HEAD, OPTIONS
@@ -34,21 +38,46 @@ Vary: Accept
 '''
 logger = logging.getLogger('my-logging')
 
-class CustomUserList(APIView):
-    serializer_class = CustomUserSerializer
 
-    def get(self, request, fromat=None):
-        cu = CustomUser.objects.all().filter(is_superuser=False)
+class UserList(generics.ListAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, 
+                          IsOwnerCanRead]
+    
+    def get(self, request, *args, **kwargs):
+        self.queryset = User.objects.filter(username=request.user)
+        logger.debug('call restful api for user list.')
+        return super().get(request, *args, **kwargs)
 
-        logger.debug('this is debug information.')
-        logger.info('this is info information.')
-        logger.warn('this is warn information.')
-        logger.error('this is error information.')
-        logger.critical('this is critical information.')
+    
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, 
+                          IsOwnerCanRead]
+    
+    def get(self, request, *args, **kwargs):
+        logger.debug('call restful api for user detail.')
+        return super().get(request, *args, **kwargs)
+
+
+
+
+# class CustomUserList(APIView):
+#     serializer_class = CustomUserSerializer
+
+#     def get(self, request, fromat=None):
+#         cu = CustomUser.objects.all().filter(is_superuser=False)
+
+#         logger.debug('this is debug information.')
+#         logger.info('this is info information.')
+#         logger.warn('this is warn information.')
+#         logger.error('this is error information.')
+#         logger.critical('this is critical information.')
         
-        if request.user == 'admin':
-            return Response({'message': 'user is belong to superuser. ' + logger})
-        return Response(
-                {'data': self.serializer_class(cu, many=True).data},
-                status=status.HTTP_200_OK
-            )
+#         if request.user == 'admin':
+#             return Response({'message': 'user is belong to superuser. ' + logger})
+#         return Response(
+#                 {'data': self.serializer_class(cu, many=True).data},
+#                 status=status.HTTP_200_OK
+#             )

@@ -1,35 +1,40 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
-from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
+from django.contrib.auth.models import User
+# from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
+# from django.utils.translation import gettext_lazy as _
+# from django.utils import timezone
 
-from users.managers import CustomUserManager
+# from users.managers import CustomUserManager
 
 # AbstractUser
 
-UserRole = {'admin': 'admin', 'member': 'member'}
+# UserRole = {'admin': 'admin', 'member': 'member'}
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = None
+# class 
 
-    email = models.EmailField(_('email address'), unique=True)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
 
-    # TODO: add fields as follows.
-    # oring_id
-    # group_id
-    # description
-    # role: UserRole
-    # created_at
-    # updated_at
+# class CustomUser(AbstractBaseUser, PermissionsMixin):
+#     username = None
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+#     email = models.EmailField(_('email address'), unique=True)
+#     is_staff = models.BooleanField(default=False)
+#     is_active = models.BooleanField(default=True)
+#     date_joined = models.DateTimeField(default=timezone.now)
 
-    objects = CustomUserManager()
+#     # TODO: add fields as follows.
+#     # oring_id
+#     # group_id
+#     # description
+#     # role: UserRole
+#     # created_at
+#     # updated_at
 
-    def __str__(self) -> str:
-        return self.email
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = []
+
+#     objects = CustomUserManager()
+
+#     def __str__(self) -> str:
+#         return self.email
+
