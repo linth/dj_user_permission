@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 # from users.models import CustomUser
 # from users.serializers import CustomUserSerializer
 from users.serializers import UserSerializer
-from users.permissions import IsOwnerCanRead, IsOwnerOrReadOnly
+from users.permissions import IsOwnerCanRead, IsOwnerOrReadOnly, ReadOnly
 
 import logging
 # https://testdriven.io/blog/django-custom-user-model/
@@ -43,9 +43,11 @@ class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, 
                           IsOwnerCanRead]
+    # permission_classes = [IsAuthenticated|ReadOnly]
     
     def get(self, request, *args, **kwargs):
-        self.queryset = User.objects.filter(username=request.user)
+        # self.queryset = User.objects.filter(username=request.user)
+        self.queryset = User.objects.all()
         logger.debug('call restful api for user list.')
         return super().get(request, *args, **kwargs)
 

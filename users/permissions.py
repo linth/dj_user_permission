@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from rest_framework.permissions import SAFE_METHODS
 
 import logging
 
@@ -14,6 +15,12 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         
         # Write permissions are only allowed to the owner of the snippet.
         return obj.owner == request.user
+    
+
+class ReadOnly(permissions.BasePermission):
+    # 只能可以讀
+    def has_permission(self, request, view):
+        return request.method in SAFE_METHODS        
     
     
 class IsOwnerCanRead(permissions.BasePermission):
