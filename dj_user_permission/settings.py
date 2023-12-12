@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'custom_users',
+    'gen_faker_data',
 ]
 
 MIDDLEWARE = [
