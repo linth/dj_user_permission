@@ -103,6 +103,7 @@ class UserList(generics.ListAPIView):
         logger.debug(f'args = {args}')
         
         # get args, kwargs
+        # http://localhost:8000/users/name=george,age=30
         name = kwargs.get('message').split(',')[0]
         age = kwargs.get('message').split(',')[1]
         logger.debug(f'name: {name}')
