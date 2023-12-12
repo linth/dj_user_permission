@@ -102,6 +102,7 @@ class UserList(generics.ListAPIView):
         logger.debug('call restful api for user list.')
         logger.debug(f'args = {args}')
         
+        # get args, kwargs
         name = kwargs.get('message').split(',')[0]
         age = kwargs.get('message').split(',')[1]
         logger.debug(f'name: {name}')
