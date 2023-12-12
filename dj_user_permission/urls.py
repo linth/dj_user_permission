@@ -26,7 +26,7 @@ urlpatterns = [
     # path('', CustomUserList.as_view(), name='CustomUserList'),
     
     path('api-auth/', include('rest_framework.urls')),
-    path('users/', view=UserList.as_view()),
+    path('users/<str:message>/', view=UserList.as_view()),
     path('users/<int:pk>', view=UserDetail.as_view()),
 
     path('users-fbv/', view=user_list, name='user-list'),

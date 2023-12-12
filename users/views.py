@@ -5,7 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import BaseAuthentication, SessionAuthentication
 
 # from users.models import CustomUser
 # from users.serializers import CustomUserSerializer
@@ -41,6 +42,8 @@ logger = logging.getLogger('my-logging')
 
 
 @api_view(['GET', 'POST'])
+@authentication_classes([SessionAuthentication, BaseAuthentication])
+@permission_classes([IsAuthenticated])
 def user_list(request):
     """
     List all users, or create a new user.
@@ -48,7 +51,11 @@ def user_list(request):
     if request.method == 'GET':
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
+        content = {
+            'user': str(request.user), # `django.contrib.auth.User` instance.
+            'auth': str(request.auth), # None
+        }
+        return Response(serializer.data, content)
     elif request.method == 'POST':
         serializer = UserSerializer(data=request.data)
 
@@ -59,6 +66,8 @@ def user_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes([SessionAuthentication, BaseAuthentication])
+@permission_classes([IsAuthenticated])
 def user_detail(request, pk):
     ''' Retrieve, update or delete a user. '''
     try:
@@ -82,23 +91,33 @@ def user_detail(request, pk):
 
 
 class UserList(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication, BaseAuthentication]
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, 
-                          IsOwnerCanRead]
+    permission_classes = [IsAuthenticated, IsOwnerCanRead]
     # permission_classes = [IsAuthenticated|ReadOnly]
     
     def get(self, request, *args, **kwargs):
         # self.queryset = User.objects.filter(username=request.user)
         self.queryset = User.objects.all()
         logger.debug('call restful api for user list.')
-        return super().get(request, *args, **kwargs)
+        logger.debug(f'args = {args}')
+        
+        name = kwargs.get('message').split(',')[0]
+        age = kwargs.get('message').split(',')[1]
+        logger.debug(f'name: {name}')
+        logger.debug(f'age: {age}')
+        
+        content = {
+            'user': str(request.user), # `django.contrib.auth.User` instance.
+            'auth': str(request.auth), # None
+        }
+        return Response(content, status=status.HTTP_200_OK)
 
     
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, 
-                          IsOwnerCanRead]
+    permission_classes = [IsAuthenticated, IsOwnerCanRead]
     
     def get(self, request, *args, **kwargs):
         logger.debug('call restful api for user detail.')
