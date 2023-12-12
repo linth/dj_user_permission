@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # from users.views import CustomUserList
-from users.views import UserList, UserDetail
+from users.views import UserList, UserDetail, user_list, user_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +26,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('users/', view=UserList.as_view()),
     path('users/<int:pk>', view=UserDetail.as_view()),
+
+    path('users-fbv/', view=user_list, name='user-list'),
+    path('users-fbv/<int:pk>/', view=user_detail, name='user-detail'),
 ]

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # from django.utils.translation import gettext_lazy as _
 # from django.utils import timezone
 
+# https://docs.djangoproject.com/en/5.0/topics/auth/default/
 # from users.managers import CustomUserManager
 
 # AbstractUser
