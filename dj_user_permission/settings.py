@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'users',
+    'extend_user',
     'custom_users',
     'gen_faker_data',
 ]
