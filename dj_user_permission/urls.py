@@ -24,6 +24,7 @@ from gen_faker_data.views import gen_faker_user
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', CustomUserList.as_view(), name='CustomUserList'),
+    path('extend_user/', include('extend_user.urls')),
     
     path('api-auth/', include('rest_framework.urls')),
     path('users/<str:message>/', view=UserList.as_view()),
