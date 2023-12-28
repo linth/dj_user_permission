@@ -18,7 +18,7 @@ from django.urls import path, include
 
 # from users.views import CustomUserList
 from users.views import UserList, UserDetail, user_list, user_detail
-from gen_faker_data.views import gen_faker_user
+from gen_faker_data.views import gen_faker_user, gen_faker_extend_user
 
 
 urlpatterns = [
@@ -34,4 +34,5 @@ urlpatterns = [
     path('users-fbv/<int:pk>/', view=user_detail, name='user-detail'),
 
     path('gen_faker_user/', view=gen_faker_user, name='gen_faker_user'),
+    path('gen_faker_extend_user/', view=gen_faker_extend_user, name='gen_faker_extend_user'),
 ]
